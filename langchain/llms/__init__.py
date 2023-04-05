@@ -23,6 +23,7 @@ from langchain.llms.self_hosted import SelfHostedPipeline
 from langchain.llms.self_hosted_hugging_face import SelfHostedHuggingFaceLLM
 from langchain.llms.stochasticai import StochasticAI
 from langchain.llms.writer import Writer
+from langchain.llms.kobold import KoboldAI
 
 __all__ = [
     "Anthropic",
@@ -33,6 +34,7 @@ __all__ = [
     "DeepInfra",
     "ForefrontAI",
     "GooseAI",
+    "KoboldAI",
     "Modal",
     "NLPCloud",
     "OpenAI",
@@ -63,6 +65,7 @@ type_to_cls_dict: Dict[str, Type[BaseLLM]] = {
     "gooseai": GooseAI,
     "huggingface_hub": HuggingFaceHub,
     "huggingface_endpoint": HuggingFaceEndpoint,
+    "koboldai": KoboldAI,
     "modal": Modal,
     "nlpcloud": NLPCloud,
     "openai": OpenAI,
