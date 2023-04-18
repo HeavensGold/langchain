@@ -19,7 +19,7 @@ class KoboldAI(LLM, BaseModel):
             koboldai = KoboldAI()
     """
 
-    temperature: float = 1.99
+    temperature: float = 0.5
     """What sampling temperature to use."""
 
     length: int = 256
@@ -87,6 +87,7 @@ class KoboldAI(LLM, BaseModel):
 
                 response = KoboldAI("Tell me a joke.")
         """
+        print("input:", prompt)
         response = requests.post(
             url=self.url,
             headers={
@@ -96,6 +97,7 @@ class KoboldAI(LLM, BaseModel):
         )
         response_json = response.json()
         text = response_json["results"][0]["text"]
+        print("output:", text)
         if stop is not None:
             # I believe this is required since the stop tokens
             # are not enforced by the model parameters
