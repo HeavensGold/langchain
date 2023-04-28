@@ -46,7 +46,7 @@ good code into the codebase.
 
 ### 🏭Release process
 
-As of now, LangChain has an ad hoc release process: releases are cut with high frequency via by
+As of now, LangChain has an ad hoc release process: releases are cut with high frequency by
 a developer and published to [PyPI](https://pypi.org/project/langchain/).
 
 LangChain follows the [semver](https://semver.org/) versioning standard. However, as pre-1.0 software,
@@ -72,6 +72,8 @@ poetry install -E all
 ```
 
 This will install all requirements for running the package, examples, linting, formatting, tests, and coverage. Note the `-E all` flag will install all optional dependencies necessary for integration testing.
+
+❗Note: If you're running Poetry 1.4.1 and receive a `WheelFileValidationError` for `debugpy` during installation, you can try either downgrading to Poetry 1.4.0 or disabling "modern installation" (`poetry config installer.modern-installation false`) and re-install requirements. See [this `debugpy` issue](https://github.com/microsoft/debugpy/issues/1246) for more details.
 
 Now, you should be able to run the common tasks in the following section.
 
@@ -119,6 +121,12 @@ To run unit tests:
 
 ```bash
 make test
+```
+
+To run unit tests in Docker:
+
+```bash
+make docker_tests
 ```
 
 If you add new logic, please add a unit test.
