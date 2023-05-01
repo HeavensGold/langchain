@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from pydantic import BaseModel, Extra, Field, root_validator
+from pydantic import Extra, Field, root_validator
 
 from langchain.chains import LLMChain
 from langchain.chains.base import Chain
@@ -14,7 +14,7 @@ DEFAULT_HEADERS = {
 }
 
 
-class LLMRequestsChain(Chain, BaseModel):
+class LLMRequestsChain(Chain):
     """Chain that hits a URL and then uses an LLM to parse results."""
 
     llm_chain: LLMChain
@@ -57,7 +57,7 @@ class LLMRequestsChain(Chain, BaseModel):
         except ImportError:
             raise ValueError(
                 "Could not import bs4 python package. "
-                "Please it install it with `pip install bs4`."
+                "Please install it with `pip install bs4`."
             )
         return values
 

@@ -1,13 +1,13 @@
 """Chain pipeline where the outputs of one step feed directly into next."""
 from typing import Dict, List
 
-from pydantic import BaseModel, Extra, root_validator
+from pydantic import Extra, root_validator
 
 from langchain.chains.base import Chain
 from langchain.input import get_color_mapping
 
 
-class SequentialChain(Chain, BaseModel):
+class SequentialChain(Chain):
     """Chain where the outputs of one chain feed directly into next."""
 
     chains: List[Chain]
@@ -93,8 +93,15 @@ class SequentialChain(Chain, BaseModel):
             known_values.update(outputs)
         return {k: known_values[k] for k in self.output_variables}
 
+    async def _acall(self, inputs: Dict[str, str]) -> Dict[str, str]:
+        known_values = inputs.copy()
+        for i, chain in enumerate(self.chains):
+            outputs = await chain.acall(known_values, return_only_outputs=True)
+            known_values.update(outputs)
+        return {k: known_values[k] for k in self.output_variables}
 
-class SimpleSequentialChain(Chain, BaseModel):
+
+class SimpleSequentialChain(Chain):
     """Simple chain where the outputs of one step feed directly into next."""
 
     chains: List[Chain]
@@ -150,4 +157,21 @@ class SimpleSequentialChain(Chain, BaseModel):
             self.callback_manager.on_text(
                 _input, color=color_mapping[str(i)], end="\n", verbose=self.verbose
             )
+        return {self.output_key: _input}
+
+    async def _acall(self, inputs: Dict[str, str]) -> Dict[str, str]:
+        _input = inputs[self.input_key]
+        color_mapping = get_color_mapping([str(i) for i in range(len(self.chains))])
+        for i, chain in enumerate(self.chains):
+            _input = await chain.arun(_input)
+            if self.strip_outputs:
+                _input = _input.strip()
+            if self.callback_manager.is_async:
+                await self.callback_manager.on_text(
+                    _input, color=color_mapping[str(i)], end="\n", verbose=self.verbose
+                )
+            else:
+                self.callback_manager.on_text(
+                    _input, color=color_mapping[str(i)], end="\n", verbose=self.verbose
+                )
         return {self.output_key: _input}

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 class SeleniumURLLoader(BaseLoader):
@@ -71,6 +71,7 @@ class SeleniumURLLoader(BaseLoader):
             chrome_options = ChromeOptions()
             if self.headless:
                 chrome_options.add_argument("--headless")
+                chrome_options.add_argument("--no-sandbox")
             if self.executable_path is None:
                 return Chrome(options=chrome_options)
             return Chrome(executable_path=self.executable_path, options=chrome_options)

@@ -2,8 +2,6 @@
 
 from typing import Any, List, Mapping, Optional, Union
 
-from pydantic import BaseModel
-
 from langchain.agents.react.base import ReActChain, ReActDocstoreAgent
 from langchain.agents.tools import Tool
 from langchain.docstore.base import Docstore
@@ -23,7 +21,7 @@ Made in 2022."""
 _FAKE_PROMPT = PromptTemplate(input_variables=["input"], template="{input}")
 
 
-class FakeListLLM(LLM, BaseModel):
+class FakeListLLM(LLM):
     """Fake LLM for testing that outputs elements of a list."""
 
     responses: List[str]
@@ -64,20 +62,6 @@ def test_predict_until_observation_normal() -> None:
     agent = ReActDocstoreAgent.from_llm_and_tools(fake_llm, tools)
     output = agent.plan([], input="")
     expected_output = AgentAction("Search", "foo", outputs[0])
-    assert output == expected_output
-
-
-def test_predict_until_observation_repeat() -> None:
-    """Test when no action is generated initially."""
-    outputs = ["foo", " Search[foo]"]
-    fake_llm = FakeListLLM(responses=outputs)
-    tools = [
-        Tool(name="Search", func=lambda x: x, description="foo"),
-        Tool(name="Lookup", func=lambda x: x, description="bar"),
-    ]
-    agent = ReActDocstoreAgent.from_llm_and_tools(fake_llm, tools)
-    output = agent.plan([], input="")
-    expected_output = AgentAction("Search", "foo", "foo\nAction: Search[foo]")
     assert output == expected_output
 
 

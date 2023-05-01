@@ -36,6 +36,7 @@ from langchain.llms import (
     Modal,
     OpenAI,
     Petals,
+    PipelineAI,
     SagemakerEndpoint,
     StochasticAI,
     Writer,
@@ -48,15 +49,21 @@ from langchain.prompts import (
     PromptTemplate,
 )
 from langchain.sql_database import SQLDatabase
+from langchain.utilities.arxiv import ArxivAPIWrapper
 from langchain.utilities.google_search import GoogleSearchAPIWrapper
 from langchain.utilities.google_serper import GoogleSerperAPIWrapper
+from langchain.utilities.powerbi import PowerBIDataset
 from langchain.utilities.searx_search import SearxSearchWrapper
 from langchain.utilities.serpapi import SerpAPIWrapper
 from langchain.utilities.wikipedia import WikipediaAPIWrapper
 from langchain.utilities.wolfram_alpha import WolframAlphaAPIWrapper
 from langchain.vectorstores import FAISS, ElasticVectorSearch
 
-__version__ = metadata.version(__package__)
+try:
+    __version__ = metadata.version(__package__)
+except metadata.PackageNotFoundError:
+    # Case where package metadata is not available.
+    __version__ = ""
 del metadata  # optional, avoids polluting the results of dir(__package__)
 
 verbose: bool = False
@@ -71,6 +78,7 @@ __all__ = [
     "LLMBashChain",
     "LLMCheckerChain",
     "LLMMathChain",
+    "ArxivAPIWrapper",
     "SelfAskWithSearchChain",
     "SerpAPIWrapper",
     "SerpAPIChain",
@@ -89,6 +97,7 @@ __all__ = [
     "Modal",
     "OpenAI",
     "Petals",
+    "PipelineAI",
     "StochasticAI",
     "Writer",
     "BasePromptTemplate",
@@ -102,6 +111,7 @@ __all__ = [
     "HuggingFacePipeline",
     "SQLDatabase",
     "SQLDatabaseChain",
+    "PowerBIDataset",
     "FAISS",
     "MRKLChain",
     "VectorDBQA",

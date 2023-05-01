@@ -23,6 +23,10 @@ class TestModel(BaseModel):
     )
 
 
+# Prevent pytest from trying to run tests on TestModel
+TestModel.__test__ = False  # type: ignore[attr-defined]
+
+
 DEF_RESULT = """{
     "action": "Update",
     "action_input": "The PydanticOutputParser class is powerful",
@@ -46,7 +50,9 @@ DEF_EXPECTED_RESULT = TestModel(
 def test_pydantic_output_parser() -> None:
     """Test PydanticOutputParser."""
 
-    pydantic_parser = PydanticOutputParser(pydantic_object=TestModel)
+    pydantic_parser: PydanticOutputParser[TestModel] = PydanticOutputParser(
+        pydantic_object=TestModel
+    )
 
     result = pydantic_parser.parse(DEF_RESULT)
     print("parse_result:", result)
@@ -56,7 +62,9 @@ def test_pydantic_output_parser() -> None:
 def test_pydantic_output_parser_fail() -> None:
     """Test PydanticOutputParser where completion result fails schema validation."""
 
-    pydantic_parser = PydanticOutputParser(pydantic_object=TestModel)
+    pydantic_parser: PydanticOutputParser[TestModel] = PydanticOutputParser(
+        pydantic_object=TestModel
+    )
 
     try:
         pydantic_parser.parse(DEF_RESULT_FAIL)
